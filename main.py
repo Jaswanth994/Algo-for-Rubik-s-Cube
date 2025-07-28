@@ -14,17 +14,21 @@ def print_solution(scramble, solution, elapsed):
         print(f"Solving time: {elapsed:.3f} seconds")
 
 if __name__ == "__main__":
-    scramble_moves = ['U', "R'", 'F', 'L', "D'", 'B']  # Or randomized
+    scramble_moves = ['U', "R'", 'F', 'L', "D'", 'B']  # Or generate/randomize
     cube = RubiksCube()
     for move in scramble_moves:
         cube.apply_move(move)
+
     print("Initial scrambled cube (ASCII visualization):\n")
     print(cube)
 
     print("\nSolving optimally with A* search + heuristics...\n")
     start_time = time.time()
-    solution = a_star_solve(cube, max_depth=16)
+
+    # Updated: Use recommended max_depth and timeout
+    solution = a_star_solve(cube, max_depth=22, timeout=10)
     elapsed = time.time() - start_time
+
     print_solution(scramble_moves, solution, elapsed)
 
     if solution:
