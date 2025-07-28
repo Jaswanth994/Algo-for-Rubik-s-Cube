@@ -1,14 +1,14 @@
-# tests.py
-
 import unittest
 import time
 import threading
 from cube import RubiksCube
 from solver import a_star_solve
 
+
 def apply_moves(cube, moves):
     for m in moves:
         cube.apply_move(m)
+
 
 def a_star_solve_with_timeout(cube, max_depth=12, timeout=5):
     """
@@ -17,7 +17,8 @@ def a_star_solve_with_timeout(cube, max_depth=12, timeout=5):
     """
     result = [None]
     def target():
-        result[0] = a_star_solve(cube, max_depth)
+        # Pass timeout down to solver to limit internal run time as well
+        result[0] = a_star_solve(cube, max_depth=max_depth, timeout=timeout)
     t = threading.Thread(target=target)
     t.daemon = True
     t.start()
@@ -26,7 +27,14 @@ def a_star_solve_with_timeout(cube, max_depth=12, timeout=5):
         return None
     return result[0]
 
+
 class TestRubiksCubeWithTiming(unittest.TestCase):
+
+    def test_solved_cube(self):
+        """Solver should immediately solve a solved cube (no moves needed)."""
+        cube = RubiksCube()
+        solution = a_star_solve_with_timeout(cube, max_depth=1, timeout=2)
+        self.assertEqual(solution, [], "Solver should return empty list for already solved cube")
 
     def test_simple_scramble_timings(self):
         """Test a fixed simple scramble to verify solver correctness and efficiency."""
@@ -97,6 +105,7 @@ class TestRubiksCubeWithTiming(unittest.TestCase):
 
         if solved_count == 0:
             self.fail("No random scrambles solved within timeout — possible solver issue.")
+
 
 if __name__ == "__main__":
     unittest.main()
