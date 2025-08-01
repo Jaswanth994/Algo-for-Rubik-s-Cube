@@ -1,10 +1,6 @@
 
----
-
-````markdown
 # Rubik's Cube Solver — AeroHack 2025 - CS
 
----
 
 ## Overview
 
@@ -76,6 +72,11 @@ The system features:
 * Ensures solution correctness by verifying the cube’s solved state post-solving.
 
 ---
+----
+### UML Diagram
+![UML of Soln](images/uml.png) 
+
+----
 
 ## Requirements
 
@@ -94,6 +95,9 @@ python main.py
 
 This will scramble the cube with a preset sequence, attempt to solve using `A*` search, and display solution steps and timings.
 
+### Example Console Output
+
+![main.py Cube](images/main_output.png) 
 ### Launch GUI
 
 ```bash
@@ -107,13 +111,23 @@ The GUI provides an interactive experience with:
 * Visual feedback and animated solution
 * Undo, reset, and status messages
 
+### Screenshots
+
+![Scrambled Cube](images/gui_Scrambled.png)  
+*Scrambled cube state*
+
+![Solved Cube](images/gui_solved.png)  
+*Cube solved after applying the solution moves*
+
+
 ### Run Unit Tests
 
 ```bash
 python tests.py
 ```
-
+**Test Suite Output:**
 Automated tests provide confidence in solver correctness and efficiency.
+![tests ouput](images/tests_output1.png)  
 
 ---
 
@@ -129,8 +143,8 @@ Automated tests provide confidence in solver correctness and efficiency.
 
 ## Performance
 
-* Typical solves of 8–12 move scrambles complete within 5–10 seconds on standard hardware.
-* Maximum tested search depth is 22 moves, adequate for hackathon-level challenges.
+* Typical solves of 4-8 move scrambles within <1 seconds on standard hardware.
+* Maximum tested search depth is 12 moves, took more than 8-10 seconds, adequate for hackathon-level challenges.
 * Parallel solving further reduces effective solving time on multicore machines.
 
 ---
@@ -152,7 +166,7 @@ Good luck reviewing, and thank you for considering this project.
 
 ---
 
-*Prepared by,
-Jaswanth Gosu (Hackathon Contestant)*
+#### *Prepared by, Jaswanth Gosu* 
 
-```
+
+
