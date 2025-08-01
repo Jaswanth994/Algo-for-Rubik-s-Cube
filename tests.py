@@ -79,7 +79,7 @@ class TestRubiksCubeWithTiming(unittest.TestCase):
         import random
         moves = ['U', "U'", 'D', "D'", 'F', "F'", 'B', "B'", 'L', "L'", 'R', "R'"]
         num_tests = 10
-        max_scramble_length = 4
+        max_scramble_length = 6
         max_solver_depth = 12
         solver_timeout = 7
         solved_count = 0
