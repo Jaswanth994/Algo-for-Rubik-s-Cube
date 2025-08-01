@@ -26,6 +26,9 @@ def a_star_solve(start_cube, max_depth=22, timeout=10):
     - Move pruning avoids redundant & inverse moves on same face.
     - Timeout for hackathon reliability.
     """
+    if start_cube.is_solved():
+        return []
+    
     MOVES = ['U', "U'", 'D', "D'", 'F', "F'", 'B', "B'", 'L', "L'", 'R', "R'"]
     start_time = time.time()
 
@@ -69,31 +72,46 @@ def parallel_a_star_solve(start_cube, max_depth=22, timeout=10):
     Parallelizes the first move to explore multiple branches quickly.
     Returns the shortest solution found by any thread within the timeout.
     """
+    if start_cube.is_solved():
+        return []
     MOVES = ['U', "U'", 'D', "D'", 'F', "F'", 'B', "B'", 'L', "L'", 'R', "R'"]
     solutions = []
     threads = []
     found = threading.Event()
     lock = threading.Lock()
+    start_time = time.time()
 
     def solve_branch(move):
         if found.is_set():
             return
         cube = start_cube.copy()
         cube.apply_move(move)
-        path = a_star_solve(cube, max_depth=max_depth-1, timeout=timeout)
+        # ADJUSTED: timeout for this thread = total timeout - time spent so far
+        elapsed = time.time() - start_time
+        thread_timeout = max(1, timeout - elapsed)
+        path = a_star_solve(cube, max_depth=max_depth-1, timeout=thread_timeout)
         if path is not None:
             with lock:
-                solutions.append([move] + path)
-                found.set()  # Optional: stop other threads early
+                # Double-check event to avoid race
+                if not found.is_set():
+                    solutions.append([move] + path)
+                    found.set()  # Optionally, you may set this only on "short" solutions
 
+    # Launch all threads
     for move in MOVES:
         t = threading.Thread(target=solve_branch, args=(move,))
         threads.append(t)
         t.start()
+
+    # Join each thread, but don't wait longer than timeout in total
+    end_time = start_time + timeout
     for t in threads:
-        t.join(timeout)
+        remaining = max(0, end_time - time.time())
+        if remaining > 0:
+            t.join(remaining)
+
+    # Filter/return best solution if found
     if solutions:
-        # Return the shortest found
         return min(solutions, key=len)
     return None
 
