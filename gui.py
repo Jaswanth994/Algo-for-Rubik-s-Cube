@@ -128,7 +128,7 @@ class CubeGUI(tk.Tk):
         scramble_snapshot = self.scramble_sequence.copy()
 
         def solver_thread():
-            solution = a_star_solve(self.cube, max_depth=22, timeout=12)
+            solution = a_star_solve(self.cube, max_depth=40, timeout=30)
             if solution:
                 # Animate application
                 for move in solution:
